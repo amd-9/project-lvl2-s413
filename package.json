@@ -1,9 +1,9 @@
 {
   "name": "supreme-differ",
-  "version": "0.0.1",
+  "version": "0.0.8",
   "description": "Supreme differ generator",
   "bin": {
-    "brain-games": "dist/bin/gendiff.js"
+    "gendiff": "dist/bin/gendiff.js"
   },
   "files": [
     "dist"
@@ -43,6 +43,7 @@
     "jest": "^24.1.0"
   },
   "dependencies": {
+    "commander": "^2.19.0",
     "npm": "^6.6.0"
   }
 }
