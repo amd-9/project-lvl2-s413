@@ -1,6 +1,6 @@
 {
   "name": "supreme-differ",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Supreme differ generator",
   "bin": {
     "gendiff": "dist/bin/gendiff.js"
@@ -40,6 +40,7 @@
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-babel": "^5.3.0",
     "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jest": "^22.2.2",
     "jest": "^24.1.0"
   },
   "dependencies": {
