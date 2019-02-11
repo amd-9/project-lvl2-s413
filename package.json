@@ -1,6 +1,6 @@
 {
   "name": "supreme-differ",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Supreme differ generator",
   "bin": {
     "gendiff": "dist/bin/gendiff.js"
