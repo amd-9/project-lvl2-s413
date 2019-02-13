@@ -1,24 +1,18 @@
-import fs from 'fs';
-import path from 'path';
+import yaml from 'js-yaml';
 import _ from 'lodash';
+import path from 'path';
+import genericDiffer from './parsers/generic';
+
+const parserRegisty = {
+  '.yml': yaml.safeLoad,
+  '.json': JSON.parse,
+};
+
+const getParse = type => (_.has(parserRegisty, type) ? parserRegisty[type] : JSON.parse);
 
 export default (pathToConfig1, pathToConfig2) => {
-  const firstConfig = JSON.parse(fs.readFileSync(path.resolve(pathToConfig1)));
-  const secondConfig = JSON.parse(fs.readFileSync(path.resolve(pathToConfig2)));
+  const confingType = path.extname(pathToConfig1);
+  const parse = getParse(confingType);
 
-  const reducer = (acc, key) => {
-    if (_.has(secondConfig, key)) {
-      return firstConfig[key] !== secondConfig[key]
-        ? { ...acc, [`+ ${key}`]: secondConfig[key], [`- ${key}`]: firstConfig[key] } : { ...acc, [`  ${[key]}`]: firstConfig[key] };
-    }
-    return { ...acc, [`- ${key}`]: firstConfig[key] };
-  };
-
-  const deletedOrChanged = Object.keys(firstConfig).reduce(reducer, {});
-  const added = Object.keys(secondConfig).reduce((acc, key) => (
-    _.has(firstConfig, key)
-      ? acc : { ...acc, [`+ ${key}`]: secondConfig[key] }), {});
-  const diffResult = { ...deletedOrChanged, ...added };
-
-  return `{${Object.keys(diffResult).reduce((acc, key) => `${acc}\n  ${key}: ${diffResult[key]}`, '')}\n}`;
+  return genericDiffer(parse, pathToConfig1, pathToConfig2);
 };

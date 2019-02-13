@@ -1,6 +1,6 @@
 {
   "name": "supreme-differ",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Supreme differ generator",
   "main": "dist/differ-engine.js",
   "bin": {
@@ -46,6 +46,7 @@
   },
   "dependencies": {
     "commander": "^2.19.0",
+    "js-yaml": "^3.12.1",
     "lodash": "^4.17.11",
     "npm": "^6.6.0"
   }
