@@ -11,6 +11,9 @@ build:
 test:
 	npm test
 
+watch:
+	npm run watch
+
 publish:
 	npm publish
 
