@@ -9,3 +9,6 @@
 
 ## Usage
 [![asciicast](https://asciinema.org/a/T6Ys2BtFUrgS1VirD1Ax8rjO5.svg)](https://asciinema.org/a/T6Ys2BtFUrgS1VirD1Ax8rjO5)
+
+## JSON config diff
+[![asciicast](https://asciinema.org/a/aV1s5fZvBZtuhWhFlPAHCjpI2.svg)](https://asciinema.org/a/aV1s5fZvBZtuhWhFlPAHCjpI2)
