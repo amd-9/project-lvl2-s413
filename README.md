@@ -15,3 +15,6 @@
 
 ## YAML config diff
 [![asciicast](https://asciinema.org/a/IQ4mx6hMr7BLGpgvAF0hu1Hq3.svg)](https://asciinema.org/a/IQ4mx6hMr7BLGpgvAF0hu1Hq3)
+
+## INI config diff
+[![asciicast](https://asciinema.org/a/0FPhhWv3BOD0Ii5FsJKtNZXmX.svg)](https://asciinema.org/a/0FPhhWv3BOD0Ii5FsJKtNZXmX)
