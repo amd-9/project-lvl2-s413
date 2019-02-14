@@ -1,3 +1,7 @@
+env:
+  global:
+    - CC_TEST_REPORTER_ID=629e4bf31413601e4ed37534f6a7ad85e402e5ea6763bdd4d3f5933d0d9ae2f6
+
 language: node_js
 node_js:
   - node
