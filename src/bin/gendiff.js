@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 import program from 'commander';
-import differ from '../differ-engine';
+import buildDiffer from '..';
 
 program.description('Compares two configuration files and shows a difference.')
   .version('0.2.0')
@@ -8,7 +8,7 @@ program.description('Compares two configuration files and shows a difference.')
   .option('-f, --format [type]', 'Output format')
   .action((firstConfig, secondConfig) => {
     if (firstConfig && secondConfig) {
-      console.log(differ(firstConfig, secondConfig));
+      console.log(buildDiffer(firstConfig, secondConfig));
     }
   });
 
