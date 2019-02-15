@@ -11,6 +11,10 @@ build:
 test:
 	npm test
 
+test-coverage:
+	npm test-coverage
+
+
 watch:
 	npm run watch
 
