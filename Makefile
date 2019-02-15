@@ -12,7 +12,7 @@ test:
 	npm test
 
 test-coverage:
-	npm test-coverage
+	npm run test-coverage
 
 
 watch:
