@@ -1,30 +1,6 @@
 import _ from 'lodash';
 import render from './render';
 
-// export default (firstConfig, secondConfig) => {
-//   const configKeys = _.union(Object.keys(firstConfig), Object.keys(secondConfig));
-//   console.log('rest!');
-
-//   const reducer = (acc, key) => {
-//     if (_.has(firstConfig, key)) {
-//       if (_.has(secondConfig, key)) {
-//         if (firstConfig[key] !== secondConfig[key]) {
-//           return [...acc,
-//             `  + ${key}: ${secondConfig[key]}`,
-//             `  - ${key}: ${firstConfig[key]}`];
-//         }
-//         return [...acc, `    ${key}: ${firstConfig[key]}`];
-//       }
-//       return [...acc, `  - ${key}: ${firstConfig[key]}`];
-//     }
-//     return [...acc, `  + ${key}: ${secondConfig[key]}`];
-//   };
-//   const diffResult = configKeys.reduce(reducer, []);
-
-//   return `{\n${diffResult.join('\n')}\n}`;
-// };
-
-
 const buildASTNode = (firstConfigNode, secondConfigNode) => {
   const nodeKeys = _.union(Object.keys(firstConfigNode), Object.keys(secondConfigNode));
 
@@ -43,7 +19,15 @@ const buildASTNode = (firstConfigNode, secondConfigNode) => {
             key,
             status: 'modified',
             currentValue: secondConfigNode[key],
-            children: buildASTNode(firstConfigNode[key], secondConfigNode[key]),
+            children: buildASTNode(firstConfigNode[key], firstConfigNode[key]),
+          }];
+        }
+        if (_.isObject(secondConfigNode[key])) {
+          return [...acc, {
+            key,
+            status: 'modified',
+            previousValue: firstConfigNode[key],
+            children: buildASTNode(secondConfigNode[key], secondConfigNode[key]),
           }];
         }
         if (firstConfigNode[key] !== secondConfigNode[key]) {
@@ -51,7 +35,7 @@ const buildASTNode = (firstConfigNode, secondConfigNode) => {
             return [...acc, {
               key,
               status: 'modified',
-              previousValue: firstConfigNode[key],
+              currentValue: secondConfigNode[key],
               children: buildASTNode(secondConfigNode[key], secondConfigNode[key]),
             }];
           }
@@ -72,7 +56,7 @@ const buildASTNode = (firstConfigNode, secondConfigNode) => {
         return [...acc, {
           key,
           status: 'removed',
-          children: buildASTNode(firstConfigNode[key], firstConfigNode),
+          children: buildASTNode(firstConfigNode[key], firstConfigNode[key]),
         }];
       }
       return [...acc, {

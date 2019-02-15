@@ -35,10 +35,10 @@ const configFiles = [
   ],
 ];
 
-// test.each(configFiles)('Should diff %s ', (configType, pathToConfig1, pathToConfig2, pathToResult) => {
-//   const expected = fs.readFileSync(path.resolve(pathToResult), 'utf-8');
-//   expect(differ(pathToConfig1, pathToConfig2)).toBe(expected);
-// });
+test.each(configFiles)('Should diff %s ', (configType, pathToConfig1, pathToConfig2, pathToResult) => {
+  const expected = fs.readFileSync(path.resolve(pathToResult), 'utf-8');
+  expect(differ(pathToConfig1, pathToConfig2)).toBe(expected);
+});
 
 test('Should create AST diff', () => {
   const pathToConfig1 = '__tests__/__fixtures__/recursive/before.json';
