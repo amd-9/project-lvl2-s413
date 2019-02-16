@@ -1,78 +1,43 @@
 import _ from 'lodash';
-import buidASTRenderer from './renders/ast';
+// import buidASTRenderer from './renders/ast';
 
-const buildAST = (config1, config2) => {
-  const configKeys = _.union(Object.keys(config1), Object.keys(config2));
+const getPredicateActions = (firstConfig, secondConfig) => {
+  const predicateActions = [
+    {
+      predicate: key => _.has(firstConfig, key) && !_.has(secondConfig, key),
+      action: key => ({ key, type: 'removed', value: firstConfig[key] }),
+    },
+    {
+      predicate: key => !_.has(firstConfig, key),
+      action: key => ({ key, type: 'added', value: secondConfig[key] }),
+    },
+    {
+      predicate: key => (_.isObject(firstConfig[key]) && _.isObject(secondConfig[key])),
+      action: (key, f) => ({ key, type: 'unchanged', children: f(firstConfig[key], secondConfig[key]) }),
+    },
+    {
+      predicate: key => firstConfig[key] !== secondConfig[key],
+      action: key => [{ key, type: 'added', value: secondConfig[key] }, { key, type: 'removed', value: firstConfig[key] }],
+    },
+    {
+      predicate: key => (firstConfig[key] === secondConfig[key]),
+      action: key => ({ key, type: 'unchanged', value: firstConfig[key] }),
+    },
+  ];
+
+  return predicateActions;
+};
+
+const buildAST = (firstConfig, secondConfig) => {
+  const configKeys = _.union(Object.keys(firstConfig), Object.keys(secondConfig));
+  const predicateActions = getPredicateActions(firstConfig, secondConfig);
 
   const reducer = (acc, key) => {
-    if (_.has(config1, key)) {
-      if (_.has(config2, key)) {
-        if (_.isObject(config1[key])) {
-          if (_.isObject(config2[key])) {
-            return [...acc, {
-              key,
-              status: 'unchanged',
-              children: buildAST(config1[key], config2[key]),
-            }];
-          }
-          return [...acc, [{
-            key,
-            status: 'added',
-            value: config2[key],
-          }, {
-            key,
-            status: 'removed',
-            value: config1[key],
-          }]];
-        }
-        if (_.isObject(config2[key])) {
-          return [...acc, [{
-            key,
-            status: 'added',
-            value: config2[key],
-          }, {
-            key,
-            status: 'removed',
-            value: config1[key],
-          }]];
-        }
-        if (config1[key] !== config2[key]) {
-          return [...acc, [{
-            key,
-            status: 'added',
-            value: config2[key],
-          }, {
-            key,
-            status: 'removed',
-            value: config1[key],
-          }]];
-        }
-        return [...acc, {
-          key,
-          status: 'unchanged',
-          value: config1[key],
-        }];
-      }
-      return [...acc, {
-        key,
-        status: 'removed',
-        value: config1[key],
-      }];
-    }
-
-    return [...acc, {
-      key,
-      status: 'added',
-      value: config2[key],
-    }];
+    const { action } = predicateActions.find(({ predicate }) => predicate(key));
+    return [...acc, action(key, buildAST)];
   };
 
   return configKeys.reduce(reducer, []);
 };
 
-export default (firstConfig, secondConfig, format) => {
-  const ast = buildAST(firstConfig, secondConfig);
-  const renderer = buidASTRenderer(ast);
-
-  return format === 'json' ? renderer.renderAsJson() : renderer.renderAsPlain();
-};
+export default buildAST;

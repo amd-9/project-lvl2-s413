@@ -4,7 +4,7 @@ const stringify = value => (_.isObject(value) ? '[complex value]' : value);
 
 const renderAST = (astNode, path) => {
   const {
-    key, status, value, children,
+    key, type, value, children,
   } = astNode;
 
   const renderPatterns = {
@@ -21,12 +21,12 @@ const renderAST = (astNode, path) => {
   }
 
   if (children) {
-    return _.filter(children, child => child.status !== 'unchanged')
+    return _.filter(children, child => child.type !== 'unchanged')
       .map(node => renderAST(node, [...path, `${key}.`])).join('\n');
   }
 
-  return renderPatterns[status](key, value);
+  return renderPatterns[type](key, value);
 };
 
 
-export default ast => `${_.filter(ast, node => node.status !== 'unchanged').map(node => renderAST(node, [])).join('\n')}`;
+export default ast => `${_.filter(ast, node => node.type !== 'unchanged').map(node => renderAST(node, [])).join('\n')}`;

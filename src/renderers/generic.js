@@ -15,7 +15,7 @@ const renderAST = (astNode, level) => {
   const padding = ' '.repeat(level * paddingPerLevel);
   const symbolPadding = ' '.repeat(level * paddingPerLevel - modificationSymbolLength);
   const {
-    key, status, value, children,
+    key, type, value, children,
   } = astNode;
 
   const renderPatterns = {
@@ -28,7 +28,7 @@ const renderAST = (astNode, level) => {
     return `${padding}${key}: {\n${_.flatten(children).map(node => renderAST(node, level + 1)).join('\n')}\n${padding}}`;
   }
 
-  return renderPatterns[status](key, value, padding);
+  return renderPatterns[type](key, value, padding);
 };
 
 export default ast => `{\n${_.flatten(ast).map(node => renderAST(node, 1)).join('\n')}\n}`;
