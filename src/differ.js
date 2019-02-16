@@ -15,7 +15,7 @@ const buildAST = (config1, config2) => {
               children: buildAST(config1[key], config2[key]),
             }];
           }
-          return [...acc, {
+          return [...acc, [{
             key,
             status: 'added',
             value: config2[key],
@@ -23,10 +23,10 @@ const buildAST = (config1, config2) => {
             key,
             status: 'removed',
             value: config1[key],
-          }];
+          }]];
         }
         if (_.isObject(config2[key])) {
-          return [...acc, {
+          return [...acc, [{
             key,
             status: 'added',
             value: config2[key],
@@ -34,10 +34,10 @@ const buildAST = (config1, config2) => {
             key,
             status: 'removed',
             value: config1[key],
-          }];
+          }]];
         }
         if (config1[key] !== config2[key]) {
-          return [...acc, {
+          return [...acc, [{
             key,
             status: 'added',
             value: config2[key],
@@ -45,7 +45,7 @@ const buildAST = (config1, config2) => {
             key,
             status: 'removed',
             value: config1[key],
-          }];
+          }]];
         }
         return [...acc, {
           key,

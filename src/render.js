@@ -25,10 +25,10 @@ const renderAST = (astNode, level) => {
   };
 
   if (children) {
-    return `${padding}${key}: {\n${children.map(node => renderAST(node, level + 1)).join('\n')}\n${padding}}`;
+    return `${padding}${key}: {\n${_.flatten(children).map(node => renderAST(node, level + 1)).join('\n')}\n${padding}}`;
   }
 
   return renderPatterns[status](key, value, padding);
 };
 
-export default ast => `{\n${ast.map(node => renderAST(node, 1)).join('\n')}\n}`;
+export default ast => `{\n${_.flatten(ast).map(node => renderAST(node, 1)).join('\n')}\n}`;
