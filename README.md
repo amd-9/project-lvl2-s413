@@ -24,3 +24,6 @@
 
 ## Outpit diff result in plain format
 [![asciicast](https://asciinema.org/a/RecyAZSW2AITLBvrFc8cbf4Ac.svg)](https://asciinema.org/a/RecyAZSW2AITLBvrFc8cbf4Ac)
+
+## Outpit diff result as JSON object
+[![asciicast](https://asciinema.org/a/gg0RTsQRHOTBnXGBZmWm0DwZz.svg)](https://asciinema.org/a/gg0RTsQRHOTBnXGBZmWm0DwZz)
