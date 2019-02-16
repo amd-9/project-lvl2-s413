@@ -1,90 +1,76 @@
 import _ from 'lodash';
 import render from './render';
 
-const buildASTNode = (firstConfigNode, secondConfigNode) => {
-  const nodeKeys = _.union(Object.keys(firstConfigNode), Object.keys(secondConfigNode));
+const buildAST = (config1, config2) => {
+  const configKeys = _.union(Object.keys(config1), Object.keys(config2));
 
   const reducer = (acc, key) => {
-    if (_.has(firstConfigNode, key)) {
-      if (_.has(secondConfigNode, key)) {
-        if (_.isObject(firstConfigNode[key])) {
-          if (_.isObject(secondConfigNode[key])) {
+    if (_.has(config1, key)) {
+      if (_.has(config2, key)) {
+        if (_.isObject(config1[key])) {
+          if (_.isObject(config2[key])) {
             return [...acc, {
               key,
               status: 'unchanged',
-              children: buildASTNode(firstConfigNode[key], secondConfigNode[key]),
+              children: buildAST(config1[key], config2[key]),
             }];
           }
           return [...acc, {
             key,
-            status: 'modified',
-            currentValue: secondConfigNode[key],
-            children: buildASTNode(firstConfigNode[key], firstConfigNode[key]),
+            status: 'added',
+            value: config2[key],
+          }, {
+            key,
+            status: 'removed',
+            value: config1[key],
           }];
         }
-        if (_.isObject(secondConfigNode[key])) {
+        if (_.isObject(config2[key])) {
           return [...acc, {
             key,
-            status: 'modified',
-            previousValue: firstConfigNode[key],
-            children: buildASTNode(secondConfigNode[key], secondConfigNode[key]),
+            status: 'added',
+            value: config2[key],
+          }, {
+            key,
+            status: 'removed',
+            value: config1[key],
           }];
         }
-        if (firstConfigNode[key] !== secondConfigNode[key]) {
-          if (_.isObject(secondConfigNode[key])) {
-            return [...acc, {
-              key,
-              status: 'modified',
-              currentValue: secondConfigNode[key],
-              children: buildASTNode(secondConfigNode[key], secondConfigNode[key]),
-            }];
-          }
+        if (config1[key] !== config2[key]) {
           return [...acc, {
             key,
-            status: 'modified',
-            currentValue: firstConfigNode[key],
-            previousValue: secondConfigNode[key],
+            status: 'added',
+            value: config2[key],
+          }, {
+            key,
+            status: 'removed',
+            value: config1[key],
           }];
         }
         return [...acc, {
           key,
           status: 'unchanged',
-          currentValue: firstConfigNode[key],
-        }];
-      }
-      if (_.isObject(firstConfigNode[key])) {
-        return [...acc, {
-          key,
-          status: 'removed',
-          children: buildASTNode(firstConfigNode[key], firstConfigNode[key]),
+          value: config1[key],
         }];
       }
       return [...acc, {
         key,
         status: 'removed',
-        currentValue: firstConfigNode[key],
+        value: config1[key],
       }];
     }
-    if (_.isObject(secondConfigNode[key])) {
-      return [...acc, {
-        key,
-        status: 'added',
-        children: buildASTNode(secondConfigNode[key], secondConfigNode[key]),
-      }];
-    }
+
     return [...acc, {
       key,
       status: 'added',
-      currentValue: secondConfigNode[key],
+      value: config2[key],
     }];
   };
 
-  return nodeKeys.reduce(reducer, []);
+  return configKeys.reduce(reducer, []);
 };
 
-const differ = (firstConfig, secondConfig) => {
-  const ast = buildASTNode(firstConfig, secondConfig);
+export default (firstConfig, secondConfig) => {
+  const ast = buildAST(firstConfig, secondConfig);
   return render(ast);
 };
-
-export default differ;

@@ -1,53 +1,34 @@
+import _ from 'lodash';
+
 const paddingPerLevel = 4;
 const modificationSymbolLength = 2;
 
-export default (ast) => {
-  const iter = (node, level) => {
-    const padding = ' '.repeat(level * paddingPerLevel);
-    const symbolPadding = ' '.repeat(level * paddingPerLevel - modificationSymbolLength);
+const stringify = (value, level) => {
+  const padding = ' '.repeat(level * paddingPerLevel);
+  if (_.isObject(value)) {
+    return `{\n${Object.keys(value).map(key => `${padding}    ${key}: ${stringify(value[key], level + 1)}`).join('\n')}\n${padding}}`;
+  }
+  return value;
+};
 
-    const {
-      key, status, currentValue, previousValue, children,
-    } = node;
+const renderAST = (astNode, level) => {
+  const padding = ' '.repeat(level * paddingPerLevel);
+  const symbolPadding = ' '.repeat(level * paddingPerLevel - modificationSymbolLength);
+  const {
+    key, status, value, children,
+  } = astNode;
 
-    if (status === 'unchanged') {
-      if (typeof children !== 'undefined') {
-        return `${padding}${key}: {\n${children.map(n => iter(n, level + 1)).join('')}${padding}}\n`;
-      }
-      return `${padding}${key}: ${currentValue}\n`;
-    }
-
-    if (status === 'added') {
-      if (typeof children !== 'undefined') {
-        return `${symbolPadding}+ ${key}: {\n${children.map(n => iter(n, level + 1)).join('')}${padding}}\n`;
-      }
-      return `${symbolPadding}+ ${key}: ${currentValue}\n`;
-    }
-
-    if (status === 'removed') {
-      if (typeof children !== 'undefined') {
-        return `${symbolPadding}- ${key}: {\n${children.map(n => iter(n, level + 1)).join('')}${padding}}\n`;
-      }
-      return `${symbolPadding}- ${key}: ${currentValue}\n`;
-    }
-
-    if (status === 'modified') {
-      if (typeof children !== 'undefined') {
-        if (typeof previousValue !== 'undefined' && typeof currentValue === 'undefined') {
-          return [`${symbolPadding}- ${key}: ${previousValue}\n`,
-            `${symbolPadding}+ ${key}: {\n${children.map(n => iter(n, level + 1)).join('')}${padding}}\n`].join('');
-        }
-        if (typeof previousValue === 'undefined' && typeof currentValue !== 'undefined') {
-          return [`${symbolPadding}- ${key}: {\n${children.map(n => iter(n, level + 1)).join('')}${padding}}\n`,
-            `${symbolPadding}+ ${key}: ${currentValue}\n`].join('');
-        }
-      }
-    }
-    return [`${symbolPadding}+ ${key}: ${previousValue}\n`,
-      `${symbolPadding}- ${key}: ${currentValue}\n`].join('');
+  const renderPatterns = {
+    added: currentKey => `${symbolPadding}+ ${currentKey}: ${stringify(value, level)}`,
+    removed: currentKey => `${symbolPadding}- ${currentKey}: ${stringify(value, level)}`,
+    unchanged: currentKey => `${padding}${currentKey}: ${stringify(value, level)}`,
   };
 
-  const result = `{\n${ast.map(node => iter(node, 1)).join('')}}`;
+  if (children) {
+    return `${padding}${key}: {\n${children.map(node => renderAST(node, level + 1)).join('\n')}\n${padding}}`;
+  }
 
-  return result;
+  return renderPatterns[status](key, value, padding);
 };
+
+export default ast => `{\n${ast.map(node => renderAST(node, 1)).join('\n')}\n}`;
