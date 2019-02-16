@@ -18,3 +18,6 @@
 
 ## INI config diff
 [![asciicast](https://asciinema.org/a/0FPhhWv3BOD0Ii5FsJKtNZXmX.svg)](https://asciinema.org/a/0FPhhWv3BOD0Ii5FsJKtNZXmX)
+
+## Recursive files diff
+[![asciicast](https://asciinema.org/a/nwD0lrYvkZnK1SryPmnTfG1oE.svg)](https://asciinema.org/a/nwD0lrYvkZnK1SryPmnTfG1oE)
