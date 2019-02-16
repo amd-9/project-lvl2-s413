@@ -1,11 +1,13 @@
 import _ from 'lodash';
 import renderGeneric from './generic';
 import renderPlain from './plain';
+import renderJson from './json';
+
 
 const renderers = {
   generic: renderGeneric,
   plain: renderPlain,
-  json: () => 'Not implemented!',
+  json: renderJson,
 };
 
 export default ast => ({

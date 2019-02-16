@@ -2,6 +2,16 @@ import fs from 'fs';
 import path from 'path';
 import generateDiff from '../src';
 
+const expectedJsonObject = [
+  { action: 'unchanged', path: 'host' },
+  {
+    action: 'updated', currentValue: '20', path: 'timeout', previousValue: '50',
+  },
+  { action: 'removed', path: 'proxy' },
+  { action: 'removed', path: 'follow' },
+  { action: 'added', path: 'verbose', value: 'true' }];
+
+
 const configFiles = [
   ['json'],
   ['yml'],
@@ -39,4 +49,11 @@ test('Should output diff result as plain format', () => {
   const expected = fs.readFileSync(path.resolve(__dirname, '__fixtures__/diff_result_plain.txt'), 'utf-8');
 
   expect(generateDiff(pathToConfig1, pathToConfig2, 'plain')).toBe(expected);
+});
+
+test('Should output diff result JSON object', () => {
+  const pathToConfig1 = '__tests__/__fixtures__/json/before.json';
+  const pathToConfig2 = '__tests__/__fixtures__/json/after.json';
+
+  expect(generateDiff(pathToConfig1, pathToConfig2, 'json')).toEqual(expectedJsonObject);
 });
