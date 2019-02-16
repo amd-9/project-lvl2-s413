@@ -21,3 +21,6 @@
 
 ## Recursive files diff
 [![asciicast](https://asciinema.org/a/nwD0lrYvkZnK1SryPmnTfG1oE.svg)](https://asciinema.org/a/nwD0lrYvkZnK1SryPmnTfG1oE)
+
+## Outpit diff result in plain format
+[![asciicast](https://asciinema.org/a/RecyAZSW2AITLBvrFc8cbf4Ac.svg)](https://asciinema.org/a/RecyAZSW2AITLBvrFc8cbf4Ac)
