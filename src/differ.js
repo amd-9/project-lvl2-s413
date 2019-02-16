@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import render from './render';
+import buidASTRenderer from './renders/ast';
 
 const buildAST = (config1, config2) => {
   const configKeys = _.union(Object.keys(config1), Object.keys(config2));
@@ -70,7 +70,9 @@ const buildAST = (config1, config2) => {
   return configKeys.reduce(reducer, []);
 };
 
-export default (firstConfig, secondConfig) => {
+export default (firstConfig, secondConfig, format) => {
   const ast = buildAST(firstConfig, secondConfig);
-  return render(ast);
+  const renderer = buidASTRenderer(ast);
+
+  return format === 'json' ? renderer.renderAsJson() : renderer.renderAsPlain();
 };

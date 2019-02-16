@@ -5,10 +5,10 @@ import buildDiffer from '..';
 program.description('Compares two configuration files and shows a difference.')
   .version('0.4.1')
   .arguments('<firstConfig> <secondConfig>')
-  .option('-f, --format [type]', 'Output format')
+  .option('-f, --format [type]', 'Output format', 'json')
   .action((firstConfig, secondConfig) => {
     if (firstConfig && secondConfig) {
-      console.log(buildDiffer(firstConfig, secondConfig));
+      console.log(buildDiffer(firstConfig, secondConfig, program.format));
     }
   });
 

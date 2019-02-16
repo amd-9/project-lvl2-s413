@@ -32,3 +32,11 @@ test('Should diff recursive files', () => {
 
   expect(differ(pathToConfig1, pathToConfig2)).toBe(expected);
 });
+
+test('Should output diff result as plain format', () => {
+  const pathToConfig1 = '__tests__/__fixtures__/json/before.json';
+  const pathToConfig2 = '__tests__/__fixtures__/json/after.json';
+  const expected = fs.readFileSync(path.resolve(__dirname, '__fixtures__/diff_result_plain.txt'), 'utf-8');
+
+  expect(differ(pathToConfig1, pathToConfig2, 'plain')).toBe(expected);
+});
