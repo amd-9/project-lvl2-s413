@@ -51,6 +51,14 @@ test('Should output diff result as plain format', () => {
   expect(generateDiff(pathToConfig1, pathToConfig2, 'plain')).toBe(expected);
 });
 
+test('Should output diff result as plain format (recursive)', () => {
+  const pathToConfig1 = '__tests__/__fixtures__/recursive/before.json';
+  const pathToConfig2 = '__tests__/__fixtures__/recursive/after.json';
+  const expected = fs.readFileSync(path.resolve(__dirname, '__fixtures__/diff_result_recursive_plain.txt'), 'utf-8');
+
+  expect(generateDiff(pathToConfig1, pathToConfig2, 'plain')).toBe(expected);
+});
+
 test('Should output diff result JSON object', () => {
   const pathToConfig1 = '__tests__/__fixtures__/json/before.json';
   const pathToConfig2 = '__tests__/__fixtures__/json/after.json';

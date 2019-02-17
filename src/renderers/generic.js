@@ -4,10 +4,10 @@ const paddingPerLevel = 4;
 const modificationSymbolLength = 2;
 
 const stringify = (value, level) => {
-  const padding = ' '.repeat(level * paddingPerLevel);
   if (!_.isObject(value)) {
     return value;
   }
+  const padding = ' '.repeat(level * paddingPerLevel);
 
   return `{\n${Object.keys(value).map(key => `${padding}    ${key}: ${stringify(value[key], level + 1)}`).join('\n')}\n${padding}}`;
 };
@@ -27,15 +27,15 @@ const renderAST = (astNode, level) => {
       return [
         `${symbolPadding}+ ${key}: ${stringify(currentValue, level)}`,
         `${symbolPadding}- ${key}: ${stringify(previousValue, level)}`,
-      ].join('\n');
+      ];
     },
     unchanged: () => `${padding}${key}: ${stringify(value, level)}`,
-    parent: () => [`${padding}${key}: {\n`,
-      `${_.flatten(children).map(node => renderAST(node, level + 1)).join('\n')}\n`,
-      `${padding}}`].join(''),
+    parent: () => [`${padding}${key}: {`,
+      ...children.map(node => renderAST(node, level + 1)),
+      `${padding}}`],
   };
 
   return renderPatterns[type](padding);
 };
 
-export default ast => `{\n${_.flatten(ast).map(node => renderAST(node, 1)).join('\n')}\n}`;
+export default ast => `{\n${_.flattenDeep(ast.map(node => renderAST(node, 1))).join('\n')}\n}`;

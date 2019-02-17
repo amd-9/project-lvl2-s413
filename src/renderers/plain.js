@@ -15,8 +15,7 @@ const renderAST = (astNode, path) => {
       return [`Property '${path.join('.')}${key}' was updated. `,
         `From ${stringify(previousValue)} to ${stringify(currentValue)}`].join('');
     },
-    parent: () => _.filter(children, child => child.type !== 'unchanged')
-      .map(node => renderAST(node, [...path, `${key}.`])).join('\n'),
+    parent: () => children.map(node => renderAST(node, [...path, `${key}.`])),
     unchanged: () => '',
   };
 
@@ -24,4 +23,4 @@ const renderAST = (astNode, path) => {
 };
 
 
-export default ast => `${_.filter(ast, node => node.type !== 'unchanged').map(node => renderAST(node, [])).join('\n')}`;
+export default ast => `${_.compact(_.flattenDeep(ast.map(node => renderAST(node, [])))).join('\n')}`;

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import buildASTDiff from './differ';
-import getASTRenderer from './renderers/ast';
+import getASTRenderer from './renderers';
 import getParser from './parser';
 
 
