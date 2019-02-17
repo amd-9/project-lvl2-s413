@@ -8,4 +8,4 @@ const parserRegisty = {
   '.ini': ini.parse,
 };
 
-export default type => (_.has(parserRegisty, type) ? parserRegisty[type] : JSON.parse);
+export default type => _.get(parserRegisty, type, JSON.parse);

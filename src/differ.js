@@ -13,11 +13,13 @@ const getPredicateActions = (firstConfig, secondConfig) => {
     },
     {
       predicate: key => (_.isObject(firstConfig[key]) && _.isObject(secondConfig[key])),
-      action: (key, f) => ({ key, type: 'unchanged', children: f(firstConfig[key], secondConfig[key]) }),
+      action: (key, f) => ({ key, type: 'parent', children: f(firstConfig[key], secondConfig[key]) }),
     },
     {
       predicate: key => firstConfig[key] !== secondConfig[key],
-      action: key => [{ key, type: 'added', value: secondConfig[key] }, { key, type: 'removed', value: firstConfig[key] }],
+      action: key => ({
+        key, type: 'modified', currentValue: secondConfig[key], previousValue: firstConfig[key],
+      }),
     },
     {
       predicate: key => (firstConfig[key] === secondConfig[key]),

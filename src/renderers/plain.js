@@ -8,22 +8,17 @@ const renderAST = (astNode, path) => {
   } = astNode;
 
   const renderPatterns = {
-    added: currentKey => `Property '${path.join('.')}${currentKey}' was added with value: ${stringify(value)}`,
-    removed: currentKey => `Property '${path.join('.')}${currentKey}' was removed`,
-    modified: (currentKey, newValue, oldValue) => [`Property '${path.join('.')}${currentKey}' was updated. `,
-      `From ${stringify(oldValue)} to ${stringify(newValue)}`].join(''),
+    added: () => `Property '${path.join('.')}${key}' was added with value: ${stringify(value)}`,
+    removed: () => `Property '${path.join('.')}${key}' was removed`,
+    modified: () => {
+      const { currentValue, previousValue } = astNode;
+      return [`Property '${path.join('.')}${key}' was updated. `,
+        `From ${stringify(previousValue)} to ${stringify(currentValue)}`].join('');
+    },
+    parent: () => _.filter(children, child => child.type !== 'unchanged')
+      .map(node => renderAST(node, [...path, `${key}.`])).join('\n'),
     unchanged: () => '',
   };
-
-  if (_.isArray(astNode)) {
-    const [{ key: nodeKey, value: newValue }, { value: oldValue }] = astNode;
-    return renderPatterns.modified(nodeKey, newValue, oldValue);
-  }
-
-  if (children) {
-    return _.filter(children, child => child.type !== 'unchanged')
-      .map(node => renderAST(node, [...path, `${key}.`])).join('\n');
-  }
 
   return renderPatterns[type](key, value);
 };

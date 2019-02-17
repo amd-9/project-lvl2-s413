@@ -10,6 +10,4 @@ const renderers = {
   json: renderJson,
 };
 
-export default ast => ({
-  render: format => (_.has(renderers, format) ? renderers[format](ast) : renderers.generic(ast)),
-});
+export default format => _.get(renderers, format, renderers.generic);
