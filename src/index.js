@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import buildASTDiff from './differ';
-import buildASTRenderer from './renderers/ast';
+import getASTRenderer from './renderers/ast';
 import getParser from './parser';
 
 
@@ -13,7 +13,7 @@ export default (pathToConfig1, pathToConfig2, format = 'generic') => {
   const secondConfig = parse(fs.readFileSync(path.resolve(pathToConfig2), 'utf-8'));
 
   const ast = buildASTDiff(firstConfig, secondConfig);
-  const astRenderer = buildASTRenderer(ast);
+  const render = getASTRenderer(format);
 
-  return astRenderer.render(format);
+  return render(ast);
 };
